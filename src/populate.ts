@@ -1,5 +1,5 @@
 import mongoose from 'mongoose'
-import { generateCategories } from './controllers/categories'
+import { generateCards } from './controllers/categories'
 
 async function start() {
     try {
@@ -7,7 +7,7 @@ async function start() {
             useNewUrlParser: true,
             useFindAndModify: false,
         })
-        generateCategories()
+        generateCards()
     } catch (e) {
         console.log(e)
     }

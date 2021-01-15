@@ -12,6 +12,11 @@ const app: express.Application = express()
 
 app.use(express.json())
 
+app.use(
+    '/static',
+    express.static('/home/antonina/Desktop/src/A-generation/kigurumi-backend/public'),
+)
+
 routes.forEach((route: IRoute) => {
     app.use(route.endpoint, route.router)
 })

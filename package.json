@@ -8,7 +8,8 @@
     "prebuild": "npm run lint && rimraf ./build",
     "build": "tsc -p ./tsconfig.json",
     "start": "npm run build && node build/index.js",
-    "populate-db": "ts-node src/populate.ts",
+    "populate-db": " mongo mongodb://devuser:qwerty123@127.0.0.1:27017/devdb scripts/delete.mongo.dbs.js && ts-node src/populate.ts",
+    "start-db": "docker start mongo_start_mongodb_container_1",
     "update": "npx npm-check -u",
     "prettier": "prettier --loglevel warn --write \"src/**/*.{ts,tsx}\"",
     "prelint": "npm run prettier",
@@ -28,7 +29,8 @@
     "dotenv-defaults": "^2.0.1",
     "express": "^4.17.1",
     "make-promises-safe": "^5.1.0",
-    "mongoose": "^5.11.11"
+    "mongoose": "^5.11.11",
+    "ts-node": "^9.1.1"
   },
   "devDependencies": {
     "@types/node": "^13.13.4",
