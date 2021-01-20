@@ -6,6 +6,7 @@ import { slippersRouter } from './slippers'
 import { cardRouter } from './cards'
 import { shoppingCartRouter } from './shoppingCart'
 import { healthRouter } from './health'
+import { authRouter } from './auth'
 
 export interface IRoute {
     endpoint: string
@@ -20,4 +21,5 @@ export const routes: Array<IRoute> = [
     { endpoint: '/slippers', router: slippersRouter },
     { endpoint: '/cards', router: cardRouter },
     { endpoint: '/shopping_cart', router: shoppingCartRouter },
+    { endpoint: '/auth', router: authRouter },
 ]

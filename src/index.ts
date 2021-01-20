@@ -2,6 +2,7 @@ import 'make-promises-safe'
 import express from 'express'
 import mongoose from 'mongoose'
 import 'dotenv-defaults/config'
+import bodyParser from 'body-parser'
 //import { generateCategories } from './controllers/categories'
 
 import { routes, IRoute } from './routes'
@@ -10,7 +11,9 @@ const appPort = process.env.PORT
 
 const app: express.Application = express()
 
-app.use(express.json())
+//app.use(express.json())
+//app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
 
 app.use(
     '/static',

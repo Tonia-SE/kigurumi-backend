@@ -7,7 +7,8 @@
   "scripts": {
     "prebuild": "npm run lint && rimraf ./build",
     "build": "tsc -p ./tsconfig.json",
-    "start": "npm run build && node build/index.js",
+    "start": "docker start 5e2a01132b9e && npm run build && node build/index.js",
+    "dev": "cross-env NODE_ENV=development npm run dev:clean && nodemon -w src -e ts --exec \"npm run dev:build && npm run dev:start\"",
     "populate-db": " mongo mongodb://devuser:qwerty123@127.0.0.1:27017/devdb scripts/delete.mongo.dbs.js && ts-node src/populate.ts",
     "start-db": "docker start mongo_start_mongodb_container_1",
     "update": "npx npm-check -u",
@@ -17,15 +18,16 @@
     "dev:clean": "rimraf build",
     "dev:build": "tsc --incremental -p tsconfig.json",
     "dev:start": "node --inspect -r source-map-support/register -r dotenv/config build/index.js",
-    "dev": "cross-env NODE_ENV=development npm run dev:clean && nodemon -w src -e ts --exec \"npm run dev:build && npm run dev:start\"",
     "test": "tap test/**/*.ts",
     "test:watch": "nodemon -e ts -w \"./src\" -w \"./test\" -x \"npm run test\"",
     "test:report": "npm run test | tee out.tap",
     "test:reporter": "tap-mocha-reporter xunit < out.tap > junit-testresults.xml"
   },
   "dependencies": {
+    "@types/body-parser": "^1.19.0",
     "@types/express": "^4.17.9",
     "@types/mongoose": "^5.10.3",
+    "body-parser": "^1.19.0",
     "dotenv-defaults": "^2.0.1",
     "express": "^4.17.1",
     "make-promises-safe": "^5.1.0",
