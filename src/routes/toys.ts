@@ -1,13 +1,13 @@
 import express from 'express'
-import { Categories } from '../models/categories'
+import { Cards } from '../models/cards'
 
-export const categoriesRouter: express.Router = express.Router()
-categoriesRouter.get(
+export const toysRouter: express.Router = express.Router()
+toysRouter.get(
   '/',
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-    const categories = await Categories.find({})
+    const toys = await Cards.find({ category: 'toys' })
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-    res.json(categories)
+    res.json(toys)
   },
 )

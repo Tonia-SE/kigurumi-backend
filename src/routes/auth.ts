@@ -3,54 +3,75 @@ import { IUser, Users } from '../models/users'
 
 export const authRouter: express.Router = express.Router()
 
-authRouter.post(
-    '/register',
-    async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-        res.header('Access-Control-Allow-Origin', '*')
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-        if (req.body.user === undefined || req.body.password === undefined) {
-            res.json({ result: `Wrong request. Can't parse user and password from payload` })
-            res.status(404)
-        } else {
-            const foundUsers: Array<IUser> = await Users.find({ username: req.body.user })
-            if (foundUsers.length === 0) {
-                Users.insertMany({
-                    username: req.body.user,
-                    password: req.body.password,
-                    token: '',
-                })
-                res.json({ result: 'User was registered' })
-                res.status(200)
-            } else {
-                res.json({ result: 'Such username is already taken' })
-                res.status(403)
-            }
-        }
-    },
+authRouter.options(
+  '/register',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    res.header('Access-Control-Allow-Methods: OPTIONS')
+    res.send(200)
+  },
 )
 
 authRouter.post(
-    '/login',
-    async (req: express.Request, res: express.Response, next: express.NextFunction) => {
-        res.header('Access-Control-Allow-Origin', '*')
-        res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-        if (req.body.user === undefined || req.body.password === undefined) {
-            res.json({ result: `Wrong request. Can't parse user and password from payload` })
-            res.status(404)
-        } else {
-            const foundUsers: Array<IUser> = await Users.find({
-                username: req.body.user,
-                password: req.body.password,
-            })
-            if (foundUsers.length === 0) {
-                res.json({ result: 'Wrong username or password' })
-                res.status(403)
-            } else {
-                res.json({ result: 'Logged in' })
-                res.status(200)
-                //TBD add token generation here
-                //Users.updateOne({username: req.body.user, password:req.body.password}, {$set: {token: 'a;lkjg;alkjhwkfl'}});
-            }
-        }
-    },
+  '/register',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    const { user, password } = JSON.parse(Buffer.from(req.body.data, 'base64').toString('ascii'))
+    if (user === undefined || password === undefined || user === '' || password === '') {
+      res.status(404)
+      res.json({ result: `Wrong request. Can't parse user and password from payload` })
+    } else {
+      const foundUsers: Array<IUser> = await Users.find({ username: user })
+      if (foundUsers.length === 0) {
+        Users.insertMany({
+          username: user,
+          password: password,
+          token: '',
+        })
+        res.status(200)
+        res.json({ result: 'User was registered' })
+      } else {
+        res.status(403)
+        res.json({ result: 'Such username is already taken' })
+      }
+    }
+  },
+)
+
+authRouter.options(
+  '/login',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    res.header('Access-Control-Allow-Methods: OPTIONS')
+    res.send(200)
+  },
+)
+
+authRouter.post(
+  '/login',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+
+    const { user, password } = JSON.parse(Buffer.from(req.body.data, 'base64').toString('ascii'))
+    if (user === undefined || password === undefined) {
+      res.status(404)
+      res.json({ result: `Wrong request. Can't parse user and password from payload` })
+    } else {
+      const foundUsers: Array<IUser> = await Users.find({
+        username: user,
+        password: password,
+      })
+      if (foundUsers.length === 0) {
+        res.status(403)
+        res.json({ result: 'Wrong username or password' })
+      } else {
+        res.status(200)
+        res.json({ result: 'Logged in' })
+      }
+    }
+  },
 )
