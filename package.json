@@ -6,7 +6,7 @@
   "author": "Antonina Tregubova",
   "scripts": {
     "build": "tsc -p ./tsconfig.json",
-    "start": "npm run start-db && MONGO_URL=mongodb://devuser:qwerty123@127.0.0.1/devdb npm run build && node build/index.js",
+    "start": "node ./build",
     "dev": "npm run start-db && cross-env NODE_ENV=development MONGO_URL=mongodb://devuser:qwerty123@127.0.0.1/devdb npm run dev:clean && nodemon -w src -e ts --exec \"npm run dev:build && npm run dev:start\"",
     "populate-db": "MONGO_URL=mongodb://devuser:qwerty123@127.0.0.1/devdb mongo mongodb://devuser:qwerty123@127.0.0.1:27017/devdb scripts/delete.mongo.dbs.js && ts-node src/populate.ts",
     "start-db": "docker-compose -f scripts/mongodb.compose.yml up -d",
