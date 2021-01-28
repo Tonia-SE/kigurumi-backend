@@ -14,11 +14,10 @@ services:
   kigurumi_backend:
     image: tregubovatonia/kigurumi-backend
     environment:
-      PORT: 8000
+      PORT: 32456
       MONGO_URL: mongodb://devuser:qwerty123@mongodb:27017/devdb
     ports: 
       - 32456:32456
-      - 8000:8000
     restart: always  
     depends_on:
       - mongodb

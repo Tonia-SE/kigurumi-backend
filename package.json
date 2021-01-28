@@ -1,5 +1,5 @@
 {
-  "name": "kigurumi backend",
+  "name": "kigurumi-backend",
   "version": "1.2.0",
   "description": "backend",
   "main": "build",
@@ -11,7 +11,7 @@
     "populate-db": "mongo mongodb://devuser:qwerty123@127.0.0.1:27017/devdb scripts/delete.mongo.dbs.js && ts-node src/populate.ts",
     "start-db": "docker-compose -f scripts/mongodb.compose.yml up -d",
     "prettier": "prettier --loglevel warn --write \"src/**/*.{ts,tsx}\"",
-    "lint": "tslint --fix -c tslint.json -t stylish -p ./tsconfig.json",
+    "lint": "tslint --fix -c tslint.json -t stylish -p ./tsconfig.json"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
