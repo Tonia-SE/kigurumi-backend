@@ -44,5 +44,6 @@ EXPOSE 32456
 
 ENV NODE_ENV=production
 ENV STATIC_ROOT=$HOME/node/public
+ENV MONGO_URL=mongodb+srv://devuser:qwerty123@cluster0.n3gup.mongodb.net/devdb
 
 CMD ["node", "./build"]
