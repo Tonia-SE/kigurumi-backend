@@ -6,12 +6,14 @@ import bodyParser from 'body-parser'
 import { routes, IRoute } from './routes'
 
 const appPort = process.env.PORT
+const mongoUrl = (process.env.MONGO_URL !== undefined) ? process.env.MONGO_URL : 'mongo://localhost:27017/test'
+const staticRoot = process.env.STATIC_ROOT ? process.env.STATIC_ROOT : '/home/app/public'
 const app: express.Application = express()
 
 app.use(bodyParser.json())
 app.use(
   '/static',
-  express.static('/home/antonina/Desktop/src/A-generation/kigurumi-backend/public'),
+  express.static(staticRoot),
 )
 routes.forEach((route: IRoute) => {
   app.use(route.endpoint, route.router)
@@ -19,7 +21,7 @@ routes.forEach((route: IRoute) => {
 
 async function start() {
   try {
-    await mongoose.connect('mongodb://devuser:qwerty123@127.0.0.1:27017/devdb', {
+    await mongoose.connect(mongoUrl, {
       useNewUrlParser: true,
       useFindAndModify: false,
     })

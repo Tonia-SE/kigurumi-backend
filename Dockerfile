@@ -5,18 +5,16 @@ FROM node:14-alpine as build
 #   && apk --no-cache add --virtual builds-deps build-base python
 
 # set app basepath
-ENV HOME=/home/app
+WORKDIR /app
 
 # add app dependencies
-COPY package.json $HOME/node/
-COPY package-lock.json $HOME/node/
+COPY package.json  package.json
+COPY package-lock.json  package-lock.json
 
-# change workgin dir and install deps in quiet mode
-WORKDIR $HOME/node
-RUN npm ci -q
+RUN npm i
 
 # copy all app files
-COPY . $HOME/node/
+COPY . .
 
 # compile typescript and build all production stuff
 RUN npm run build
@@ -28,21 +26,23 @@ RUN npm prune --production
 FROM node:14-alpine
 
 # create use with no permissions
-RUN addgroup -g 101 -S app && adduser -u 100 -S -G app -s /bin/false app
+#RUN addgroup -g 101 -S app && adduser -u 100 -S -G app -s /bin/false app
 
 # set app basepath
 ENV HOME=/home/app
 
 # copy production complied node app to the new image
-COPY --from=build $HOME/node/ $HOME/node/
-RUN chown -R app:app $HOME/*
+COPY --from=build /app $HOME/node/
+#RUN chown -R app:app $HOME/*
 
 # run app with low permissions level user
-USER app
+#USER app
 WORKDIR $HOME/node
 
-EXPOSE 3000
+ENV PORT=32456
+EXPOSE 32456
 
 ENV NODE_ENV=production
+ENV STATIC_ROOT=$HOME/node/public
 
 CMD ["node", "./build"]
