@@ -17,8 +17,8 @@ export interface IOrder extends Document {
 }
 
 export const OrderSchema: Schema = new Schema({
-  user: { type: String, required: true, unique: true },
-  id: { type: String, required: true, unique: true },
+  user: { type: String, required: true, unique: false },
+  id: { type: String, required: true, unique: false },
   date: { type: String, required: true, unique: false },
   total: { type: String, required: true, unique: false },
   positions: { type: Array, required: true, unique: false },

@@ -9,7 +9,7 @@ profileRouter.options(
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-    res.header('Access-Control-Allow-Methods: OPTIONS')
+    res.header('Access-Control-Allow-Methods', 'OPTIONS, POST, DELETE')
     res.send(200)
   },
 )
@@ -40,7 +40,7 @@ profileRouter.options(
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
-    res.header('Access-Control-Allow-Methods: OPTIONS')
+    res.header('Access-Control-Allow-Methods', 'OPTIONS, POST, DELETE')
     res.sendStatus(200)
   },
 )
@@ -71,4 +71,21 @@ profileRouter.post(
       res.json({ result: 'Such order has already created' })
     }
   },
+)
+
+
+profileRouter.delete(
+  '/orders',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    const user = req.body.user
+    const orderId = req.body.orderId
+    Order.deleteMany({
+      user: user,
+      id: orderId,
+    })
+    res.status(200)
+    res.json({ result: 'Order was deleted' })
+  }
 )

@@ -1,5 +1,3 @@
-//db.auth('root', 'rootpassword')
-
 db = db.getSiblingDB('devdb')
 
 db.createUser(
