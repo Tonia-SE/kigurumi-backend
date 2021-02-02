@@ -4,6 +4,22 @@ import { IWish, Wish } from '../models/wishes'
 
 export const profileRouter: express.Router = express.Router()
 
+
+profileRouter.get(
+  '/whish_list',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {    
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    let filter = {}
+    if (req.query.user !== undefined) {
+      filter = { user: req.query.user }
+    }
+    const orders = await Wish.find(filter)
+    res.status(200)
+    res.json(orders)
+  },
+)
+
 profileRouter.options(
   '/wish_list',
   async (req: express.Request, res: express.Response, next: express.NextFunction) => {
@@ -22,16 +38,25 @@ profileRouter.post(
     const user = req.body.user
     const id = req.body.id
     const size = req.body.size
+    const titleEng = req.body.titleEng
+    const titleRu = req.body.titleRu
+    const price = req.body.price
+    const imageUrl = req.body.imageUrl
+
     const foundWishes: Array<IWish> = await Wish.find({ user: user, id: id })
     if (!foundWishes.length) {
       Wish.insertMany({
         user: user,
         id: id,
         size: size,
+        titleEng: titleEng,
+        titleRu: titleRu,
+        price: price,
+        imageUrl: imageUrl,
       })
-      res.status(200)
-      res.json({ result: 'Wish list were updated' })
     }
+    res.status(200)
+    res.json({ result: 'Wish list were updated' })
   },
 )
 
@@ -59,10 +84,10 @@ profileRouter.post(
     if (!foundOrders.length) {
       Order.insertMany({
         user: user,
-        date: date,
+        orderDate: date,
         total: total,
         positions: positions,
-        id: orderId,
+        orderId: orderId,
       })
       res.status(200)
       res.json({ result: 'Orders were updated' })
@@ -73,6 +98,20 @@ profileRouter.post(
   },
 )
 
+profileRouter.get(
+  '/orders',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {    
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    let filter = {}
+    if (req.query.user !== undefined) {
+      filter = { user: req.query.user }
+    }
+    const orders = await Order.find(filter)
+    res.status(200)
+    res.json(orders)
+  },
+)
 
 profileRouter.delete(
   '/orders',
@@ -81,11 +120,22 @@ profileRouter.delete(
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
     const user = req.body.user
     const orderId = req.body.orderId
-    Order.deleteMany({
-      user: user,
-      id: orderId,
-    })
+    Order.remove({ user: user, orderId: orderId }, () => {})
     res.status(200)
-    res.json({ result: 'Order was deleted' })
-  }
+    res.json({ result: `Order №${orderId} was removed` })
+  },
+)
+
+profileRouter.delete(
+  '/wish_list',
+  async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+    res.header('Access-Control-Allow-Origin', '*')
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept')
+    const user = req.body.user
+    const wishId = req.body.wishId
+    const size = req.body.size
+    Wish.remove({ user: user, id: wishId, size: size }, () => {})
+    res.status(200)
+    res.json({ result: 'Your wish was deleted' })
+  },
 )

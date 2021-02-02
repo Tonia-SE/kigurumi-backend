@@ -1,4 +1,3 @@
-import 'make-promises-safe'
 import express from 'express'
 import mongoose from 'mongoose'
 import 'dotenv-defaults/config'
